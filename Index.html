@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGI Lender Qualification Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-overlay">
+        <div class="login-container">
+            <h1>🔐 Access Required</h1>
+            <p>Enter password to use the AGI Lender Qualification Tool</p>
+            <input type="password" id="passwordInput" placeholder="Enter password" />
+            <button onclick="checkPassword()" id="loginBtn">Access Tool</button>
+            <div id="loginError" class="login-error" style="display: none;">
+                ❌ Incorrect password. Please try again.
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App (hidden until login) -->
+    <div id="mainApp" style="display: none;">
+        <div class="container">
+            <div class="header">
+                <h1>AGI Lender Qualification Tool</h1>
+                <p>Upload your criteria sheet and get instant qualification results</p>
+                <button onclick="logout()" class="logout-btn">Logout</button>
+            </div>
+
+            <div class="main-content">
+                <div class="input-section">
+                    <div class="file-upload">
+                        <input type="file" id="csvFile" class="file-input" accept=".csv" />
+                        <label for="csvFile" class="file-label">
+                            📊 Upload AGI Lender Guidelines CSV
+                        </label>
+                        <div id="fileStatus" class="status" style="display: none;"></div>
+                    </div>
+
+                    <form class="merchant-form" id="merchantForm">
+                        <div class="form-group">
+                            <label for="position">Position</label>
+                            <select id="position" required>
+                                <option value="">Select Position</option>
+                                <option value="1">1st Position</option>
+                                <option value="2">2nd Position</option>
+                                <option value="3">3rd Position</option>
+                                <option value="4">4th Position</option>
+                                <option value="5">5th Position</option>
+                                <option value="6">6th Position</option>
+                                <option value="7">7th Position</option>
+                                <option value="8">8th Position</option>
+                                <option value="9">9th Position</option>
+                                <option value="10">10th Position</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tib">Time in Business (months)</label>
+                            <input type="number" id="tib" min="0" placeholder="e.g., 60" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="revenue">Monthly Revenue ($)</label>
+                            <input type="number" id="revenue" min="0" placeholder="e.g., 41800" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fico">FICO Score</label>
+                            <input type="number" id="fico" min="300" max="850" placeholder="e.g., 600" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="state">State</label>
+                            <input type="text" id="state" placeholder="e.g., Texas or TX" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="industry">Industry</label>
+                            <input type="text" id="industry" placeholder="e.g., Oilfield services / trucking" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="soleProp" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" id="soleProp" style="width: auto; margin: 0;" />
+                                Sole Proprietorship
+                            </label>
+                            <small style="color: #6b7280; font-size: 0.8rem; margin-top: 4px;">Check if merchant is a sole proprietorship</small>
+                        </div>
+                    </form>
+
+                    <button type="button" class="process-btn" id="processBtn" disabled>
+                        🚀 Process Qualification
+                    </button>
+                </div>
+
+                <div id="results" class="results" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Password Configuration - CHANGE THIS PASSWORD
+        const CORRECT_PASSWORD = "agi2025"; // ⬅️ Change this to your desired password
+
+        // Login Functions
+        function checkPassword() {
+            const input = document.getElementById('passwordInput');
+            const error = document.getElementById('loginError');
+            
+            if (input.value === CORRECT_PASSWORD) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                sessionStorage.setItem('authenticated', 'true');
+            } else {
+                error.style.display = 'block';
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('authenticated');
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('passwordInput').value = '';
+        }
+
+        // Check if already authenticated
+        window.addEventListener('load', function() {
+            if (sessionStorage.getItem('authenticated') === 'true') {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+            }
+        });
+
+        // Allow Enter key to submit password
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>
